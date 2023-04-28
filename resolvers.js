@@ -17,6 +17,17 @@ const resolvers = {
         favouriteMovies: () => {
             return MoviesList.filter(movie => movie.id == 1)
         }
+    },
+    Mutation: {
+        createUser(_, args) {
+            let id = UserData.length + 1;
+            let userData = {
+                id,
+                ...args.input
+            }
+            UserData.push(userData)
+            return userData;
+        }
     }
 }
 
