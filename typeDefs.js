@@ -16,7 +16,7 @@ const typeDefs = gql`
     }
 
     type Query {
-        users: [User!]
+        users: UsersResult!
         user(id: ID): User
         friends: [User!]
         movies: [Movie!]
@@ -39,6 +39,16 @@ const typeDefs = gql`
         RUSSIA
         CANADA
     }
+
+    type UserSuccessResult {
+        users: [User!]
+    }
+
+    type UserError {
+        message: String!
+    }
+
+    union UsersResult = UserSuccessResult | UserError
 `;
 
 module.exports = typeDefs;

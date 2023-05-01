@@ -10,7 +10,8 @@ const MoviesList = require("./data/moviesList.json");
 const resolvers = {
     Query: {
         users: (parent, args, context, info) => {
-            return UserData
+            if( UserData ) return { users: UserData }
+            return { message: "Custom Error message" }
         },
         user: (_, args) => {
             return UserData.find(user => user.id == args.id)
@@ -33,6 +34,18 @@ const resolvers = {
             }
             UserData.push(userData)
             return userData;
+        }
+    },
+
+    UsersResult: {
+        __resolveType(obj) {
+            if ( obj.users ) {
+                return "UserSuccessResult"
+            }
+            if ( obj.message ) {
+                return "UserError"
+            }
+            return null
         }
     }
 }
