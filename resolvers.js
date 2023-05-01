@@ -8,46 +8,51 @@ const MoviesList = require("./data/moviesList.json");
     info consists of graphQL query details
 */
 const resolvers = {
-    Query: {
-        users: (parent, args, context, info) => {
-            if( UserData ) return { users: UserData }
-            return { message: "Custom Error message" }
-        },
-        user: (_, args) => {
-            return UserData.find(user => user.id == args.id)
-        },
-        movies: () => {
-            return MoviesList
-        }
+  Query: {
+    users: (parent, args, context, info) => {
+      if (UserData) return { users: UserData };
+      return { message: "Custom Error message" };
     },
-    User: {
-        favouriteMovies: () => {
-            return MoviesList.filter(movie => movie.id == 1)
-        }
+    user: (_, args) => {
+      return UserData.find((user) => user.id == args.id);
     },
-    Mutation: {
-        createUser(_, args) {
-            let id = UserData.length + 1;
-            let userData = {
-                id,
-                ...args.input
-            }
-            UserData.push(userData)
-            return userData;
-        }
+    userByName: (_, args) => {
+      return UserData.filter((user) =>
+        user.name.toLowerCase().includes(args.name.toLowerCase())
+      );
     },
+    movies: () => {
+      return MoviesList;
+    },
+  },
+  User: {
+    favouriteMovies: () => {
+      return MoviesList.filter((movie) => movie.id == 1);
+    },
+  },
+  Mutation: {
+    createUser(_, args) {
+      let id = UserData.length + 1;
+      let userData = {
+        id,
+        ...args.input,
+      };
+      UserData.push(userData);
+      return userData;
+    },
+  },
 
-    UsersResult: {
-        __resolveType(obj) {
-            if ( obj.users ) {
-                return "UserSuccessResult"
-            }
-            if ( obj.message ) {
-                return "UserError"
-            }
-            return null
-        }
-    }
-}
+  UsersResult: {
+    __resolveType(obj) {
+      if (obj.users) {
+        return "UserSuccessResult";
+      }
+      if (obj.message) {
+        return "UserError";
+      }
+      return null;
+    },
+  },
+};
 
 module.exports = resolvers;
